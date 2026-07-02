@@ -1,6 +1,0 @@
-{
-  "name": "JobPulse",
-  "description": "A production-ready job application tracking system with Supabase auth and database integration.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
