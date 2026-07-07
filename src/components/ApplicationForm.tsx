@@ -108,7 +108,7 @@ export default function ApplicationForm({ isOpen, onClose, onSubmit, initialData
     if (val.length > 50) {
       setErrors(prev => ({ ...prev, salaryRange: `Salary Range must be 50 characters or less (currently ${val.length}).` }));
     } else if (!isValidSalaryRange(val)) {
-      setErrors(prev => ({ ...prev, salaryRange: 'Salary Range must contain numbers and follow a valid format (e.g., $80k-$100k, 80000, 80k-100k, £80/hr).' }));
+      setErrors(prev => ({ ...prev, salaryRange: 'Salary Range must follow a valid format (e.g., 100K, 80k-100k, 80000, or £80/hr). Multiple K characters or additional letters are not allowed.' }));
     } else {
       setErrors(prev => {
         const { salaryRange, ...rest } = prev;
@@ -207,7 +207,7 @@ export default function ApplicationForm({ isOpen, onClose, onSubmit, initialData
     if (salaryRange.length > 50) {
       newErrors.salaryRange = `Salary Range must be 50 characters or less (currently ${salaryRange.length}).`;
     } else if (!isValidSalaryRange(salaryRange)) {
-      newErrors.salaryRange = 'Salary Range must contain numbers and follow a valid format (e.g., $80k-$100k, 80000, 80k-100k, £80/hr).';
+      newErrors.salaryRange = 'Salary Range must follow a valid format (e.g., 100K, 80k-100k, 80000, or £80/hr). Multiple K characters or additional letters are not allowed.';
     }
 
     if (jobDescription.length > 5000) {

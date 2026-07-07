@@ -18,11 +18,19 @@ const validationTestCases = [
   { input: '120k annually', expected: true },
   { input: '10k/month', expected: true },
   { input: '80k to 120k', expected: true },
+  { input: '50K', expected: true },
+  { input: '100K', expected: true },
+  { input: '250K', expected: true },
   { input: '', expected: true }, // empty is allowed (optional)
   { input: '   ', expected: true }, // whitespace is allowed (optional)
 
   // Invalid formats
   { input: 'abcdef', expected: false },
+  { input: '100KK', expected: false },
+  { input: '100KA', expected: false },
+  { input: '100Kabc', expected: false },
+  { input: '100ABC', expected: false },
+  { input: 'K100', expected: false },
   { input: 'salary', expected: false },
   { input: 'high', expected: false },
   { input: '$$$$', expected: false },

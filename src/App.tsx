@@ -168,7 +168,7 @@ export default function App() {
       return;
     }
     if (!isValidSalaryRange(salaryRange)) {
-      alert('Error: Salary Range must contain numbers and follow a valid format (e.g., $80k-$100k, 80000, 80k-100k, £80/hr).');
+      alert('Error: Salary Range must follow a valid format (e.g., 100K, 80k-100k, 80000, or £80/hr). Multiple K characters or additional letters are not allowed.');
       return;
     }
 
@@ -270,8 +270,6 @@ export default function App() {
         userName={session?.user?.user_metadata?.full_name || null}
         onSignInClick={() => setIsAuthOpen(true)}
         onSignOut={handleSignOut}
-        onOpenSettings={() => setIsSettingsOpen(true)}
-        onOpenSchema={() => setIsSchemaOpen(true)}
       />
 
       {/* Main Content Area */}

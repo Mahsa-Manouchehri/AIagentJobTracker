@@ -151,7 +151,33 @@ export function isValidSalaryRange(value: string): boolean {
   // Permitted characters: digits, spaces, currency symbols ($, £, €, ¥, kr),
   // separators (, . - + / \ ()), and specific abbreviation letters (k, K, m, M, t, o, h, r, y, e, a, p, n, u, l, d, w, s, S)
   const allowedPattern = /^[0-9\s$,.£€¥\-+/\\()tokKmMhryeaunlpdwsS]+$/;
-  return allowedPattern.test(trimmed);
+  if (!allowedPattern.test(trimmed)) {
+    return false;
+  }
+
+  // Check all contiguous letter blocks to prevent invalid letters or K sequences (e.g. 100KK, 100KA, 100Kabc, K100)
+  const letterRunRegex = /[a-zA-Z]+/g;
+  let match;
+  while ((match = letterRunRegex.exec(trimmed)) !== null) {
+    const word = match[0];
+    const index = match.index;
+    const lowerWord = word.toLowerCase();
+
+    // Must be one of the allowed words/abbreviations in salary ranges
+    if (!['k', 'hr', 'annually', 'month', 'to'].includes(lowerWord)) {
+      return false;
+    }
+
+    // If 'k' or 'K' is used, it must be preceded by a digit
+    if (lowerWord === 'k') {
+      const before = trimmed.substring(0, index);
+      if (!/\d\s*[$,.£€¥\-+/\\()]*\s*$/.test(before)) {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
 
 /**

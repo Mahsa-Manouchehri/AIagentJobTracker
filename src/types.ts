@@ -6,7 +6,6 @@ export interface JobApplication {
   company_name: string;
   job_title: string;
   salary_range: string;
-  currency?: string;
   location: string;
   job_description: string;
   application_status: ApplicationStatus;
