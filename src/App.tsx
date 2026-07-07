@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { getSupabase, getConnectionMode, setConnectionMode, mockSupabaseInstance } from './supabase';
+import { getSupabase, getConnectionMode, mockSupabaseInstance } from './supabase';
 import { JobApplication, ApplicationStatus } from './types';
 import { isValidSalaryRange } from './utils/parser';
 import Navbar from './components/Navbar';
 import Dashboard from './pages/Dashboard';
 import ApplicationForm from './components/ApplicationForm';
-import SupabaseSettings from './components/SupabaseSettings';
-import SupabaseSetupGuide from './components/SupabaseSetupGuide';
 import AuthModal from './components/AuthModal';
-import { Plus, SlidersHorizontal, Settings, Key, Terminal, RefreshCw, LogIn, ExternalLink } from 'lucide-react';
 
 export default function App() {
   // Session & Auth state
@@ -24,8 +21,6 @@ export default function App() {
 
   // Modals Visibility
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isSchemaOpen, setIsSchemaOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [editingApp, setEditingApp] = useState<JobApplication | null>(null);
 
@@ -254,12 +249,6 @@ export default function App() {
     }
   };
 
-  // Triggered when Supabase Connection engine parameters change
-  const handleModeChanged = () => {
-    setConnectionModeState(getConnectionMode());
-    setRefreshTrigger(prev => prev + 1);
-  };
-
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-between selection:bg-blue-100 selection:text-blue-800">
       
@@ -305,13 +294,6 @@ export default function App() {
             <span className="rounded bg-gray-100 border border-gray-150 px-2 py-0.5 text-gray-600 font-mono">
               Engine: {connectionMode === 'live' ? 'Supabase Live' : 'Sandbox (WebStorage)'}
             </span>
-            <button
-              onClick={() => setIsSchemaOpen(true)}
-              className="text-blue-600 hover:underline flex items-center space-x-1"
-            >
-              <Terminal className="h-3.5 w-3.5" />
-              <span>Get Postgres Schema & RLS SQL</span>
-            </button>
           </div>
         </div>
       </footer>
@@ -325,19 +307,6 @@ export default function App() {
         }}
         onSubmit={handleFormSubmit}
         initialData={editingApp}
-      />
-
-      {/* MODAL: Database Settings / Connection keys config */}
-      <SupabaseSettings
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        onModeChanged={handleModeChanged}
-      />
-
-      {/* MODAL: SQL setup exporter guide */}
-      <SupabaseSetupGuide
-        isOpen={isSchemaOpen}
-        onClose={() => setIsSchemaOpen(false)}
       />
 
       {/* MODAL: Supabase Auth (Sign In / Sign Up) */}

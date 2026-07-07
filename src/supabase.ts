@@ -7,6 +7,13 @@ const CONFIG_KEY = `${STORAGE_PREFIX}supabase_config`;
 const MODE_KEY = `${STORAGE_PREFIX}mode`; // 'live' or 'sandbox'
 
 export function getSavedConfig(): SupabaseConfig | null {
+  // Prioritize environment variables
+  const envUrl = (import.meta as any).env?.VITE_SUPABASE_URL;
+  const envAnonKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY;
+  if (envUrl && envAnonKey) {
+    return { url: envUrl, anonKey: envAnonKey };
+  }
+
   try {
     const saved = localStorage.getItem(CONFIG_KEY);
     if (saved) {
@@ -19,36 +26,22 @@ export function getSavedConfig(): SupabaseConfig | null {
     console.error('Failed to parse saved config', e);
   }
 
-  // Fallback to environment variables
-  const envUrl = (import.meta as any).env?.VITE_SUPABASE_URL;
-  const envAnonKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY;
-  if (envUrl && envAnonKey) {
-    return { url: envUrl, anonKey: envAnonKey };
-  }
-
   return null;
 }
 
-export function saveConfig(config: SupabaseConfig | null) {
-  if (config) {
-    localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
-    localStorage.setItem(MODE_KEY, 'live');
-  } else {
-    localStorage.removeItem(CONFIG_KEY);
-    localStorage.setItem(MODE_KEY, 'sandbox');
-  }
-}
-
 export function getConnectionMode(): 'live' | 'sandbox' {
+  // If environment variables are present, automatically use live mode
+  const envUrl = (import.meta as any).env?.VITE_SUPABASE_URL;
+  const envAnonKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY;
+  if (envUrl && envAnonKey) {
+    return 'live';
+  }
+
   const savedMode = localStorage.getItem(MODE_KEY);
   if (savedMode === 'live' && getSavedConfig()) {
     return 'live';
   }
   return 'sandbox';
-}
-
-export function setConnectionMode(mode: 'live' | 'sandbox') {
-  localStorage.setItem(MODE_KEY, mode);
 }
 
 // ==========================================
